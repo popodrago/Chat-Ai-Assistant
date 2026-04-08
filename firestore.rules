@@ -1,0 +1,87 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: conversations
+    // Document ID: auto-generated
+    // Fields:
+    //   - userId: string (required) - Owner of the conversation
+    //   - createdAt: timestamp (required) - Creation time
+    //   - lastMessage: string (optional) - Preview of last message
+    //
+    // Collection: conversations/{conversationId}/messages
+    // Document ID: auto-generated
+    // Fields:
+    //   - conversationId: string (required)
+    //   - userId: string (required) - Author of the message
+    //   - role: string (required) - 'user' or 'assistant'
+    //   - content: string (required) - Message text
+    //   - createdAt: timestamp (required) - Creation time
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && 
+        (request.auth.token.email == "pacificmugisha57@gmail.com" && request.auth.token.email_verified == true);
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isValidConversation(data) {
+      return hasRequiredFields(['userId', 'createdAt']) &&
+             data.userId is string &&
+             data.createdAt is timestamp;
+    }
+
+    function isValidMessage(data) {
+      return hasRequiredFields(['conversationId', 'userId', 'role', 'content', 'createdAt']) &&
+             data.conversationId is string &&
+             data.userId is string &&
+             data.role in ['user', 'assistant'] &&
+             data.content is string && data.content.size() <= 5000 &&
+             data.createdAt is timestamp;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /conversations/{conversationId} {
+      allow read: if isOwner(resource.data.userId) || isAdmin();
+      allow create: if isAuthenticated() && isValidConversation(request.resource.data) && (isOwner(request.resource.data.userId) || isAdmin());
+      allow update: if isOwner(resource.data.userId) && isValidConversation(request.resource.data) && request.resource.data.userId == resource.data.userId;
+      allow delete: if isOwner(resource.data.userId) || isAdmin();
+
+      match /messages/{messageId} {
+        allow read: if isOwner(get(/databases/$(database)/documents/conversations/$(conversationId)).data.userId) || isAdmin();
+        allow create: if isAuthenticated() && isValidMessage(request.resource.data) && (isOwner(get(/databases/$(database)/documents/conversations/$(conversationId)).data.userId) || isAdmin());
+      }
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "name": "Chat AI Assistant",
+  "description": "A powerful AI chat assistant built with Next.js, Supabase, and Gemini AI.",
+  "requestFramePermissions": []
+}
