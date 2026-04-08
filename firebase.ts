@@ -10,6 +10,7 @@ export const auth = getAuth(app);
 // in environments with aggressive proxy timeouts.
 export const db = initializeFirestore(app, {
   experimentalForceLongPolling: true,
+  experimentalAutoDetectLongPolling: false, // Explicitly disable auto-detection to force long polling
 }, firebaseConfig.firestoreDatabaseId);
 
 export const googleProvider = new GoogleAuthProvider();
