@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { db, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, Timestamp } from '@/firebase';
+import { db, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, Timestamp, handleFirestoreError, OperationType } from '@/firebase';
 import { Button } from '@/components/ui/button';
 import MessageBubble from './message-bubble';
 import { GoogleGenAI } from "@google/genai";
@@ -39,6 +39,7 @@ export default function ChatInterface({
   useEffect(() => {
     if (!userId || !initialConversationId) return;
 
+    const path = `conversations/${initialConversationId}/messages`;
     const messagesRef = collection(db, 'conversations', initialConversationId, 'messages');
     const q = query(messagesRef, orderBy('createdAt', 'asc'));
 
@@ -54,7 +55,7 @@ export default function ChatInterface({
       });
       setMessages(newMessages);
     }, (error) => {
-      console.error('Error fetching messages:', error);
+      handleFirestoreError(error, OperationType.LIST, path);
     });
 
     return () => unsubscribe();
@@ -69,6 +70,7 @@ export default function ChatInterface({
     if (!input.trim() || !initialConversationId || loading) return;
 
     const userMessage = input;
+    const path = `conversations/${initialConversationId}/messages`;
     setInput('');
     setLoading(true);
 
@@ -104,7 +106,7 @@ export default function ChatInterface({
         });
       }
     } catch (error) {
-      console.error('Error sending message:', error);
+      handleFirestoreError(error, OperationType.WRITE, path);
     } finally {
       setLoading(false);
     }

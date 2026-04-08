@@ -24,8 +24,12 @@ export default function Page() {
     try {
       await signInWithPopup(auth, googleProvider);
       router.push("/chat");
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred during login");
+    } catch (error: any) {
+      if (error.code === 'auth/unauthorized-domain') {
+        setError("Domain not authorized. Please add 'popodrago.github.io' to your Authorized Domains in the Firebase Console (Authentication > Settings).");
+      } else {
+        setError(error instanceof Error ? error.message : "An error occurred during login");
+      }
     } finally {
       setIsLoading(false);
     }

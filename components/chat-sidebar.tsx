@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { auth, db, collection, query, where, orderBy, onSnapshot, Timestamp } from '@/firebase';
+import { auth, db, collection, query, where, orderBy, onSnapshot, Timestamp, handleFirestoreError, OperationType } from '@/firebase';
 import { Button } from '@/components/ui/button';
 
 interface Conversation {
@@ -29,8 +29,9 @@ export default function ChatSidebar({
       return;
     }
 
+    const path = 'conversations';
     const q = query(
-      collection(db, 'conversations'),
+      collection(db, path),
       where('userId', '==', user.uid),
       orderBy('createdAt', 'desc')
     );
@@ -47,7 +48,7 @@ export default function ChatSidebar({
       setConversations(convs);
       setLoading(false);
     }, (error) => {
-      console.error('Error fetching conversations:', error);
+      handleFirestoreError(error, OperationType.LIST, path);
       setLoading(false);
     });
 
