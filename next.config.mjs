@@ -1,9 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export', // Required for GitHub Pages
-  // If you are deploying to https://<username>.github.io/<repository-name>/
-  // you MUST set basePath to '/<repository-name>'
-  // basePath: '/your-repo-name', 
+  // Set basePath to your repository name
+  basePath: '/Chat-Ai-Assistant', 
   trailingSlash: true, // Recommended for GitHub Pages to handle routes correctly
   typescript: {
     ignoreBuildErrors: true,

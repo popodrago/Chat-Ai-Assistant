@@ -1,30 +1,37 @@
-# Show my progress
+# AI Chat Assistant
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+Intelligent conversations powered by advanced AI models.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/mugishapacific779-3000s-projects/v0-show-my-progress)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/qIFSfL5RSYg)
+## Deployment to GitHub Pages
 
-## Overview
+This project is configured for automated deployment to GitHub Pages using GitHub Actions.
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+### Setup Instructions
 
-## Deployment
+1.  **Configure API Key**:
+    *   Go to your repository on GitHub.
+    *   Navigate to **Settings** > **Secrets and variables** > **Actions**.
+    *   Add a **New repository secret**:
+        *   Name: `NEXT_PUBLIC_GEMINI_API_KEY`
+        *   Value: (Your Gemini API Key from [Google AI Studio](https://aistudio.google.com/))
 
-Your project is live at:
+2.  **Enable GitHub Pages**:
+    *   Go to **Settings** > **Pages**.
+    *   Under **Build and deployment** > **Source**, select **GitHub Actions**.
 
-**[https://vercel.com/mugishapacific779-3000s-projects/v0-show-my-progress](https://vercel.com/mugishapacific779-3000s-projects/v0-show-my-progress)**
+3.  **Firebase Configuration**:
+    *   Ensure your GitHub Pages domain (e.g., `your-username.github.io`) is added to the **Authorized domains** in your Firebase Console under **Authentication** > **Settings**.
 
-## Build your app
+### Local Development
 
-Continue building your app on:
+```bash
+npm install
+npm run dev
+```
 
-**[https://v0.app/chat/qIFSfL5RSYg](https://v0.app/chat/qIFSfL5RSYg)**
+### Manual Build
 
-## How It Works
-
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+```bash
+npm run build
+```
+The static files will be generated in the `out` folder.
