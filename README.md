@@ -2,6 +2,8 @@
 
 Intelligent conversations powered by advanced AI models.
 
+run the app : https://popodrago.github.io/Chat-Ai-Assistant/
+
 ### Local Development
 
 ```bash
