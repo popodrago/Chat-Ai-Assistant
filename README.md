@@ -2,7 +2,7 @@
 
 Intelligent conversations powered by advanced AI models.
 
-run the app : https://popodrago.github.io/Chat-Ai-Assistant/
+run the app (copy and past don't click) : https://popodrago.github.io/Chat-Ai-Assistant/
 
 ### Local Development
 
